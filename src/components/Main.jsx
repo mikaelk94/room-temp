@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/Feather'
 const styles = StyleSheet.create({
   background: {
     height: '100%',
-    backgroundColor: '#065535',
+    backgroundColor: '#254EDB',
   },
   container: {
     height: '40%',
@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
     flex: 2,
     alignSelf: 'stretch',
     margin: 10,
-    backgroundColor: '#bada55',
-    borderColor: '#bada55',
+    backgroundColor: '#6690FF',
+    borderColor: '#6690FF',
     borderWidth: 2,
     borderRadius: 5,
     alignItems: 'center',
@@ -98,7 +98,7 @@ const Main = () => {
           </View>
           <View style={[styles.card]}>
             <Text style={{ fontSize: 25 }}>
-              <Icon name='arrow-up' size={30} color='red' />
+              <Icon name='arrow-up' size={30} color='#B71C20' />
               24h
             </Text>
             <Text style={{ fontSize: 40 }}>{tempMax}</Text>
