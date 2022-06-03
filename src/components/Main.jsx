@@ -1,8 +1,7 @@
-import { Text, StyleSheet, View } from 'react-native'
+import { Text, StyleSheet, View, LogBox } from 'react-native'
 import { db } from '../../firebase'
 import { collection, getDocs, limit, query, orderBy } from 'firebase/firestore'
 import { useState, useEffect } from 'react'
-import { LogBox } from 'react-native'
 import Icon from 'react-native-vector-icons/Feather'
 
 const styles = StyleSheet.create({
@@ -16,14 +15,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 40,
     padding: 20,
+    borderBottomWidth: 0,
   },
   card: {
     flex: 2,
     alignSelf: 'stretch',
     margin: 10,
-    backgroundColor: '#6690FF',
-    borderColor: '#6690FF',
-    borderWidth: 2,
+    backgroundColor: '#84A9FF',
+    borderColor: '#84A9FF',
+    borderWidth: 1,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -34,40 +34,44 @@ const Main = () => {
   const [temp, setTemp] = useState('')
   const [tempMin, setTempMin] = useState()
   const [tempMax, setTempMax] = useState()
+  const [date, setDate] = useState()
 
   LogBox.ignoreLogs(['Setting a timer'])
 
   const readTemp = async () => {
     let tempArray = []
     let timeArray = []
+
     const q = query(
       collection(db, 'temperature'),
       orderBy('time', 'desc'),
       limit(24)
     )
+
     const querySnapshot = await getDocs(q)
+
     querySnapshot.forEach((doc) => {
       tempArray.push(doc.data().temp)
       timeArray.push(doc.data().time)
-      setTemp({ temp: tempArray[0], time: timeArray[0] })
+      setTemp({ temp: tempArray[0].toFixed(1), time: timeArray[0] })
     })
-    tempArray = tempArray.sort((a, b) => a - b)
-    setTempMin(tempArray[0])
-    setTempMax(tempArray[tempArray.length - 1])
-  }
 
-  const timestampToDate = () => {
-    const date = new Date(temp.time * 1000)
-    return (
+    tempArray = tempArray.sort((a, b) => a - b)
+    setTempMin(tempArray[0].toFixed(1))
+    setTempMax(tempArray[tempArray.length - 1].toFixed(1))
+
+    const date = new Date(timeArray[0] * 1000)
+
+    setDate(
       date.getDate() +
-      '/' +
-      (date.getMonth() + 1) +
-      '/' +
-      date.getFullYear() +
-      ' ' +
-      date.getHours() +
-      ':' +
-      date.getMinutes()
+        '/' +
+        (date.getMonth() + 1) +
+        '/' +
+        date.getFullYear() +
+        ' ' +
+        date.getHours() +
+        ':' +
+        date.getMinutes()
     )
   }
 
@@ -79,8 +83,8 @@ const Main = () => {
     <View style={styles.background}>
       <View style={styles.container}>
         <View style={styles.card}>
-          <Text style={{ fontSize: 80 }}>{temp.temp}</Text>
-          <Text style={{ fontSize: 20 }}>{timestampToDate()}</Text>
+          <Text style={{ fontSize: 90 }}>{temp.temp}</Text>
+          <Text style={{ fontSize: 20 }}>{date}</Text>
         </View>
         <View
           style={{
@@ -98,7 +102,7 @@ const Main = () => {
           </View>
           <View style={[styles.card]}>
             <Text style={{ fontSize: 25 }}>
-              <Icon name='arrow-up' size={30} color='#B71C20' />
+              <Icon name='arrow-up' size={30} color='#8B0000' />
               24h
             </Text>
             <Text style={{ fontSize: 40 }}>{tempMax}</Text>
